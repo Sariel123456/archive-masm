@@ -1435,3 +1435,25 @@ def piece_preview(request, piece_id):
         content_type = 'application/octet-stream'
 
     return FileResponse(BytesIO(decrypted_data), content_type=content_type)
+
+@login_required
+def add_piece_to_folder(request, folder_id):
+    folder = get_object_or_404(Folder, id=folder_id)
+    if request.method == 'POST':
+        form = PieceForm(request.POST, request.FILES)
+        if form.is_valid():
+            piece = form.save(commit=False)
+            piece.dossier = folder  # Correction ici
+            piece.createur = request.user
+            # Calculer la taille du fichier
+            fichier = request.FILES.get('fichier')
+            if fichier:
+                piece.fichier_taille = fichier.size
+            else:
+                piece.fichier_taille = 0
+            piece.save()
+            form.save_m2m()
+            return redirect('folder_detail', folder_id=folder.id)
+    else:
+        form = PieceForm()
+    return render(request, 'add_piece.html', {'form': form, 'folder': folder})

@@ -48,6 +48,7 @@ urlpatterns = [
     path('organisation/direction/add/', views.add_direction, name='add_direction'),
     path('organisation/direction/<uuid:direction_id>/edit/', views.edit_direction, name='edit_direction'),
     path('organisation/direction/<uuid:direction_id>/delete/', views.delete_direction, name='delete_direction'),
+    path('dossier/<uuid:folder_id>/ajouter-piece/', views.add_piece_to_folder, name='add_piece_to_folder'),
 
     # Services
     path('organisation/service/add/', views.add_service, name='add_service'),
